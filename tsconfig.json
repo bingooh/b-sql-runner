@@ -1,8 +1,9 @@
 {
   "version": "2.7.2",
   "compilerOptions": {
-    "lib": ["es5", "es6"],
     "outDir": "build",
+    "rootDir": ".",
+    "lib": ["es5", "es6"],
     "target": "es5",
     "module": "commonjs",
     "moduleResolution": "node",

@@ -12,7 +12,7 @@ function clean(){
 }
 
 function compile(){
-    return gulp.src("package.json")
+    return gulp.src("package.json",{read:false})
         .pipe(shell("npm run compile"));
 }
 
@@ -39,4 +39,4 @@ exports=module.exports={
     publish,publishNext
 }
 
-gulp.task('default',gulp.series(clean,compile));
+gulp.task('default',gulp.series(clean,compile,build));
