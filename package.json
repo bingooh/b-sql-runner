@@ -1,0 +1,29 @@
+{
+  "name": "b-sql-runner",
+  "version": "0.0.1",
+  "description": "b-sql-runner",
+  "main": "index.js",
+  "scripts": {
+    "compile": "tsc",
+    "test": "echo 'no test'"
+  },
+  "keywords": [
+    "simple",
+    "sql",
+    "builder"
+  ],
+  "author": "bingooh <bingooh@163.com>",
+  "license": "MIT",
+  "dependencies": {
+    "knex": "^0.14.6"
+  },
+  "devDependencies": {
+    "@types/knex": "^0.14.12",
+    "@types/node": "8.9.4",
+    "del": "^3.0.0",
+    "gulp": "^4.0.0",
+    "gulp-shell": "^0.6.5",
+    "mysql": "^2.15.0",
+    "rimraf": "^2.6.2"
+  }
+}
