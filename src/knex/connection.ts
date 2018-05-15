@@ -1,6 +1,5 @@
 import * as Knex from "knex";
 import {Config, Transaction} from "knex";
-import {TableEntity} from "../model/stmt-model";
 import {SqlRunner} from "./sql-runner";
 
 export class ConnectionManager{
@@ -27,14 +26,14 @@ export class ConnectionManager{
             this.conns[name]=new Connection(name,Knex(configs[name]));
         }
     }
+
+    static createDefaultConnection(config:Config){
+        this.createConnections({'default':config});
+    }
 }
 
 export function getConnection(name:string='default') {
     return ConnectionManager.getConnection(name);
-}
-
-export function createConnections(configs:{[name:string]:Config}) {
-    return ConnectionManager.createConnections(configs);
 }
 
 export class Connection{
