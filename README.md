@@ -88,6 +88,10 @@ interface User{
     name:string;
 }
 const sqlRunner=getConnection().sqlRunner<User>();
+
+
+//获取`SqlRunner`实例后，还需要进一步获取具体的sql runner
+let selectSqlRunner=sqlRunner.select();
 ```
 
 `SqlRunner`实例提供以下方法获取对应的`sql runner`
@@ -96,7 +100,9 @@ const sqlRunner=getConnection().sqlRunner<User>();
 - `update()` -获取`UpdateSqlRunner`
 - `delete()` -获取`DeleteSqlRunner`
 
-### Select
+### SELECT
+`SelectSqlRunner`负责执行SELECT SQL
+
 简单查询
 ```javascript
 //select `oid`, `name` from `t_user` limit 1
@@ -106,18 +112,79 @@ let user=await sqlRunner
     .findFirst();
 ```
 
+指定查询字段
+```javascript
+//select `oid`, `name`
+sqlRunner.select('oid,name');
+sqlRunner.select().field('oid,name');
+sqlRunner.select().field('oid','name');
+sqlRunner.select().field('oid').field('name');
 
-### Insert
+//select `oid` as `id`, `name` as `nickname`
+sqlRunner.select('oid as id,name as nickname');
+```
+
+指定聚合函数查询字段
+```javascript
+import * as b from "b-sql-runner";
+
+//select count(`oid`)
+sqlRunner.select(b.count('oid'));
+
+//select count(`oid`) as `count`
+sqlRunner.select(b.count('oid').as('count'));
+
+//select count(distinct `oid`)
+sqlRunner.select(b.count().distinct('oid'));
+```
+
+指定简单查询条件
+```javascript
+//where `oid` = 1 and `name` != 'b'
+sqlRunner.select()
+    .where(b.eq('oid',1))
+    .and(b.neq('name','bill'))
+
+//where `oid` = 1 or `name` != 'b'
+sqlRunner.select()
+    .where(b.eq('oid',1))
+    .or(b.neq('name','bill'))
+
+// where `oid` = 100 and `name` = 'bill'
+sqlRunner.select()
+    .where({oid:100,name:'bill'})
+
+// where `oid` = 100 or `name` = 'bill'
+sqlRunner.select()
+    .where()
+    .or({oid:100,name:'bill'})
+```
+
+指定复杂查询条件，使用`expr()`
+```
+//where `oid` < 100 and (`oid` > 100 or `name` = 'bill')
+sqlRunner.select()
+        .where(b.lt('oid',100))
+        .or(
+            b.expr()
+                .and(b.gt('oid',100))
+                .and(b.eq('name','bill'))
+        )
+```
+
+
+
+### INSERT
 ```javascript
 
 ```
 
-### Update
+### UPDATE
 ```javascript
 
 ```
 
-### Delete
+### DELETE
 ```javascript
 
 ```

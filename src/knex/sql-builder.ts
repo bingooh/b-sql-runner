@@ -292,6 +292,8 @@ function buildSelectFieldSql(stmts:Array<string|FieldStmtEntity|RawStmtEntity>,q
                 query.min(field);break;
             case FUNC.AVG:
                 query.avg(field);break;
+            case FUNC.SUM:
+                query.sum(field);break;
             case FUNC.COUNT:
                 distinct?
                     query.countDistinct(field) :
