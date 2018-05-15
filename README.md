@@ -158,6 +158,13 @@ sqlRunner.select()
 sqlRunner.select()
     .where()
     .or({oid:100,name:'bill'})
+
+// where `oid` = 100 and `name` = 'bill'
+sqlRunner.select()
+    .where(
+        b.eq('oid',100),
+        b.eq('name','bill')
+    )
 ```
 
 指定复杂查询条件，使用`expr()`
@@ -172,6 +179,44 @@ sqlRunner.select()
         )
 ```
 
+使用`in()/idIn()`查询条件
+```javascript
+//where `oid` =1
+sqlRunner.select()
+    .where(b.in('oid',[1]))
+
+//where `oid` in (1, 2)
+sqlRunner.select()
+    .where(b.in('oid',[1,2]))
+
+//idIn()会从传入的行数据里取出(pick)指定字段的值拼接in()查询条件
+//idIn()默认取表的主键字段作为`idField`
+let users=[{oid:1},{oid:2}];
+
+//where `oid` in (1, 2)
+sqlRunner.select()
+    .from('t_user','oid')               //指定t_user表的主键为oid
+    .where(b.idIn(users))
+
+//where `oid` in (1, 2)
+sqlRunner.select()
+    .from('t_user')                      //未指定表的主键
+    .where(b.idIn(users,'oid'))  //指定'idField'为oid
+```
+
+使用子查询条件。使用`in()/exists()`实现`join`查询
+```javascript
+//select `oid` from `t_user` where `oid` in (select `oid` from `t_user` where `age` < 12)
+sqlRunner
+    .select('oid')
+    .from('t_user','oid')
+    .where(b.idIn(
+        sqlRunner
+            .select('oid')
+            .from('t_user')
+            .where(b.lt('age',12))
+    ))
+```
 
 
 ### INSERT

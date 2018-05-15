@@ -93,7 +93,7 @@ export class SqlBuilder{
                         throw new Error("idIn()/idNotIn() have to set 'table.pk' or 'idField'");
 
                     op=op==OPER.ID_IN?OPER.IN:OPER.NIN;
-                    value=idArray(value,field);
+                    value=isSelectStmtEntity(value)?value:idArray(value,field);
                     Object.assign(cond,{op,field,value});
                 }
 
