@@ -78,13 +78,11 @@ await conn.close();
 ```
 
 ## SqlRunner
-`SqlRunner`负责拼接并执行SQL
-
-获取`SqlRunner`
+`SqlRunner`负责拼接并执行SQL，以下获取`SqlRunner`
 ```javascript
 const sqlRunner=getConnection().sqlRunner();
 
-//指定数据库记录的对象类型
+//可选指定数据库记录的对象类型
 interface User{
     oid:number;
     name:string;
@@ -92,16 +90,21 @@ interface User{
 const sqlRunner=getConnection().sqlRunner<User>();
 ```
 
+`SqlRunner`实例提供以下方法获取对应的`sql runner`
+- `select()` -获取`SelectSqlRunner`
+- `insert()` -获取`InsertSqlRunner`
+- `update()` -获取`UpdateSqlRunner`
+- `delete()` -获取`DeleteSqlRunner`
+
 ### Select
 简单查询
 ```javascript
-//select `oid`, `realname` from `t_user` limit 1
-let user=sqlRunner
+//select `oid`, `name` from `t_user` limit 1
+let user=await sqlRunner
     .select('oid,name')
     .from('t_user')
     .findFirst();
 ```
-
 
 
 ### Insert
