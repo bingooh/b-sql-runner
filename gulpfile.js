@@ -23,14 +23,14 @@ function build(){
 function publish() {
     return gulp.src("package.json", { read: false })
         .pipe(shell([
-            "cd ./dist && npm publish"
+            "cd ./dist && npm publish --registry=https://registry.npmjs.org"
         ]));
 }
 
 function publishNext() {
     return gulp.src("package.json", { read: false })
         .pipe(shell([
-            "cd ./dist && npm publish --tag next"
+            "cd ./dist && npm publish --tag next --registry=https://registry.npmjs.org"
         ]));
 }
 
