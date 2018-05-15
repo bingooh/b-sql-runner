@@ -16,6 +16,7 @@ b-sql-runner参考了以下框架，在次致谢
 - 支持Typescript
 
 ## INSTALL
+通过npm安装
 ```
 npm install b-sql-runner -S
 ```
@@ -60,7 +61,7 @@ ConnectionManager.createConnections({
 ```
 
 获取数据库连接
-```
+```javascript
 import {getConnection} from "b-sql-runner";
 
 //获取默认数据库连接
@@ -71,7 +72,49 @@ const slaveDbConn=getConnection('slaveDb');
 ```
 
 关闭数据库连接池
-```
+```javascript
 const conn=getConnection();
 await conn.close();
+```
+
+## SqlRunner
+`SqlRunner`负责拼接并执行SQL
+
+获取`SqlRunner`
+```javascript
+const sqlRunner=getConnection().sqlRunner();
+
+//指定数据库记录的对象类型
+interface User{
+    oid:number;
+    name:string;
+}
+const sqlRunner=getConnection().sqlRunner<User>();
+```
+
+### Select
+简单查询
+```javascript
+//select `oid`, `realname` from `t_user` limit 1
+let user=sqlRunner
+    .select('oid,name')
+    .from('t_user')
+    .findFirst();
+```
+
+
+
+### Insert
+```javascript
+
+```
+
+### Update
+```javascript
+
+```
+
+### Delete
+```javascript
+
 ```

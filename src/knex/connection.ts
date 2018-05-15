@@ -88,7 +88,7 @@ export class Connection{
         return this.driver.destroy();
     }
 
-    sqlRunner<T>(){
+    sqlRunner<T>():SqlRunner<T>{
         this._sqlRunner=this._sqlRunner||new SqlRunner<any>(this);
         return this._sqlRunner;
     }
