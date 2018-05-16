@@ -101,12 +101,6 @@ const sqlRunner=getConnection().sqlRunner<User>();
 let selectSqlRunner=sqlRunner.select();
 ```
 
-`SqlRunner`实例提供以下方法获取对应的`sql runner`
-- `select()` -获取`SelectSqlRunner`
-- `insert()` -获取`InsertSqlRunner`
-- `update()` -获取`UpdateSqlRunner`
-- `delete()` -获取`DeleteSqlRunner`
-
 ### SELECT
 `SelectSqlRunner`负责执行SELECT SQL
 
@@ -252,7 +246,6 @@ sqlRunner
     .findWithTotal()
 ```
 
-
 ### INSERT
 ```javascript
 
@@ -267,3 +260,48 @@ sqlRunner
 ```javascript
 
 ```
+
+## Repository
+```javascript
+
+```
+
+## Transaction
+```javascript
+
+```
+
+## Dynamic SQL
+```javascript
+
+```
+
+## Raw Query
+```javascript
+
+```
+
+## Returning Query
+```javascript
+
+```
+
+## API
+以下仅列出主要API
+
+### 运算符
+- `eq()` -`=`
+- `neq()` -`!=`
+
+
+### 聚合函数
+
+### 扩展运算符
+
+### SelectSqlRunner
+
+### SqlRunner
+- `select()` -获取`SelectSqlRunner`
+- `insert()` -获取`InsertSqlRunner`
+- `update()` -获取`UpdateSqlRunner`
+- `delete()` -获取`DeleteSqlRunner`
