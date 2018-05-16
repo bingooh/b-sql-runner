@@ -37,10 +37,10 @@ npm install @types/knex -D
 import {Config} from "knex";
 import {ConnectionManager} from "b-sql-runner";
 
+//创建mysq数据库连接配置
 const dbConfig:Config={
     client: 'mysql',
     debug: false,
-    //以下为node-mysql配置
     connection: {
         host: DB_HOST,
         port: DB_PORT,
@@ -204,7 +204,7 @@ sqlRunner.select()
     .where(b.idIn(users,'oid'))  //指定'idField'为oid
 ```
 
-使用子查询条件。使用`in()/exists()`实现`join`查询
+指定子查询条件，使用`in()/exists()`实现`join`查询
 ```javascript
 //select `oid` from `t_user` where `oid` in (select `oid` from `t_user` where `age` < 12)
 sqlRunner
@@ -216,6 +216,33 @@ sqlRunner
             .from('t_user')
             .where(b.lt('age',12))
     ))
+```
+
+指定分组，排序条件
+```javascript
+//select `area`, sum(`score`) as `scores` from `t_user`
+//group by `area` having `scores` > 100
+//order by `scores` desc, `area` asc
+sqlRunner
+    .select('area')
+    .field(b.sum('score').as('scores'))
+    .from('t_user')
+    .groupBy('area')
+    .having(b.gt('scores',100))
+    .orderBy(b.desc('scores'),b.asc('area'))
+```
+
+使用分页查询，并且返回总记录数
+```javascript
+//select `oid` from `t_user` limit 10 offset 20
+//select count(*) as `total` from `t_user`
+//return: {data:Array<T>,total:number}
+sqlRunner
+    .select('oid')
+    .from('t_user')
+    .offset(20)
+    .limit(10)
+    .findWithTotal()
 ```
 
 

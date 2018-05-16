@@ -92,6 +92,7 @@ export class SelectSqlRunner<T> extends SelectStmtBuilder{
     async findTotal():Promise<number>{
         let stmt=this.toStmt();
         stmt.select=[count("*").as("total").toStmt()];
+        stmt.limit=stmt.offset=0;
 
         let row=this.firstRow(await this.buildQuery(stmt));
         if(row==undefined)return 0;
