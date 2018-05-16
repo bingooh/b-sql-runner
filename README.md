@@ -14,6 +14,12 @@ b-sql-runner参考了以下框架，在次致谢！
     - [INSRT](#insert)
     - [UPDATE](#update)
     - [DELETE](#delete)
+- [Repository](#repository)
+- [Transaction](#transaction)
+- [Dynamic SQL](#dynamic-sql)
+- [Raw Query](#raw-query)
+- [Returning Query](#returinig-query)
+- [API](#api)
 - [](#)
 
 ## Feature
@@ -39,7 +45,9 @@ npm install @types/knex -D
 ```
 
 ## Connection
-创建数据库连接，knex将创建数据库连接池。建议总是创建默认数据库连接
+创建数据库连接，建议总是创建默认数据库连接
+
+knex将创建数据库连接池，以下为mysql的配置，其他数据库配置请参考knex
 ```javascript
 import {Config} from "knex";
 import {ConnectionManager} from "b-sql-runner";
@@ -292,16 +300,59 @@ sqlRunner
 ### 运算符
 - `eq()` -`=`
 - `neq()` -`!=`
-
+- `lt()` -`<`
+- `lte()` -`<=`
+- `gt()` -`>`
+- `gte()` -`>=`
+- `like()` -`like`
+- `nlike()` -`not like`
+- `in()` -`in`
+- `nin()` -`not in`
+- `exists()` -`exists`
+- `nexists()` -`not exists`
+- `isnull()` -`is null`
+- `isnotnull()` -`is not null`
 
 ### 聚合函数
+- `distinct()`
+- `count()`
+- `avg()`
+- `sum()`
+- `min()`
+- `max()`
 
 ### 扩展运算符
-
-### SelectSqlRunner
+- `alwaysTrue()` -添加查询条件`1=1`
+- `alwaysFalse()` -`添加查询条件`1!=1
+- `idIn()` -类似`in()`，可指定`idField`
+- `idNotIn()` -类似`nin()`，可指定`idField`
+- `raw()` - 指定raw查询表达式
+- `expr()` - 指定复杂条件表达式
 
 ### SqlRunner
 - `select()` -获取`SelectSqlRunner`
 - `insert()` -获取`InsertSqlRunner`
 - `update()` -获取`UpdateSqlRunner`
 - `delete()` -获取`DeleteSqlRunner`
+- `truncate()` -`truncate table`
+
+### SelectSqlRunner
+- `findMany()` -查询多条记录
+- `findOne()` -查询1条记录，根据传入的主键值查询
+- `findFirst()` -查询前N条记录，默认查询第1条记录
+- `findTotal()` -查询满足条件的记录总数
+- `findExists()` -查询满足条件的记录是否存在
+- `findWithTotal()` -查询多条记录及满足条件的记录总数，用于分页
+
+### UpdateSqlRunner
+- `incr()` -字段值自增
+- `decr()` -字段值自减
+- `replace()` -用另一字段值替换目标字段值
+- `save()` -保存记录，即分别执行`insert/update`
+
+### DeleteSqlRunner
+- `clear()` -删除所有记录
+
+### Other
+- `inTx()` -指定执行SQL时的数据库事务
+- `returning()` -指定执行增删改操作后，要返回的受影响的记录(或查询)
