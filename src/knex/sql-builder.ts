@@ -247,7 +247,8 @@ function buildUpdateByRowsSql(stmt:UpdateStmtEntity,query:QueryBuilder,db:Knex) 
         let id=(row as any)[pk!];
         if(!id)throw new Error(`update() row's pk value is empty: ${JSON.stringify(row)}`);
 
-        /*TODO: omit row's pk*/
+        /*omit row's pk*/
+        (row as any)[pk!]=undefined;
         return db(table.name).update(row).where(pk!,'=',id);
     });
 }

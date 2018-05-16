@@ -7,7 +7,7 @@ b-sql-runner参考了以下框架，在次致谢！
 - [typeorm](https://github.com/typeorm/typeorm)
 - [squel](https://github.com/hiddentao/squel)
 
-文档快速指引
+快速指引
 - [Connecton](#connection)
 - [SqlRunner](#sqlrunner)
     - [SELECT](#select)
@@ -265,12 +265,70 @@ sqlRunner
 
 ### INSERT
 ```javascript
+sqlRunner.insert(users).into('t_user').run()
 
+sqlRunner.insert().into('t_user').values(users).run()
 ```
 
 ### UPDATE
 ```javascript
+//update `t_user` set `name` = 'bill' where `oid` = 1
+sqlRunner
+    .update()
+    .table('t_user')
+    .set('name','bill')
+    .where(b.eq('oid',1))
+    .run();
 
+//update `t_user` set `name` = 'bill', `age` = 10
+sqlRunner
+    .update()
+    .table('t_user')
+    .set({name:'bill',age:10})
+    .run()
+
+//update `t_user` set `salary` = `salary` + 100, `age` = `age` - 1, `nickname` = `name`
+sqlRunner
+    .update()
+    .table('t_user')
+    .incr('salary',100)
+    .decr('age')
+    .replace('nickname','name')
+    .run()
+```
+
+更新记录行，此时必须设置主键，并且传入的记录必须包含主键字段值
+```javascript
+let users=[{oid:1,name:'n1'},{oid:2,name:'n2'}];
+
+//每条记录生成1条更新SQL，在同1个事务里完成
+//update `t_user` set `name` = 'n1' where `oid` = 1
+//update `t_user` set `name` = 'n2' where `oid` = 2
+sqlRunner
+    .update()
+    .table('t_user','oid')    //设置主键为'oid'
+    .values(users)
+    .run()
+```
+
+保存记录行，必须设置主键，对传入的记录执行如下操作（同1个数据库事务）
+1. 如果记录不包含主键字段值，则归到`fresh rows`
+2. 如果记录包含主键字段值：
+    1.取所有记录的主键值，查询数据库判断对应的记录是否存在
+    2.如果不存在，则归到`fresh rows`
+    3.如果已存在，则归到`dirty rows`
+3. 对`fresh rows`执行`insert`，对`dirty`执行`update`
+```javascript
+let users=[{oid:1,name:'n1'},{name:'n2'}];
+
+//select `oid` from `t_user` where `oid` = '1' for update
+//insert into `t_user` (`name`) values ('n2')
+//update `t_user` set `name` = 'n1' where `oid` = 1
+sqlRunner
+    .update()
+    .table('t_user','oid')
+    .values(users)
+    .save()
 ```
 
 ### DELETE

@@ -252,7 +252,7 @@ export class UpdateSqlRunner<T> extends UpdateStmtBuilder{
             let existRows=await this.buildQuery(stmt);
             if(existRows.length!=dirtyRows.length){
                 let actualDirtyRows=[];
-                let existsIds=idArray(existRows,pk,Object.toString);
+                let existsIds=idArray(existRows,pk);
                 for(let row of dirtyRows){
                     let id=(row as any)[pk]+'';
                     if(existsIds.indexOf(id)!=-1)

@@ -137,5 +137,8 @@ export function propValueArray(
 
 export function idArray(objs:any,
                         idPropName:string,map?:(v:any)=>any){
+    map=map!=undefined?map:
+        v=>v===undefined?v:v.toString();
+
     return propValueArray(objs,idPropName,map,false);
 }
