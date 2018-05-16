@@ -1,13 +1,20 @@
 [b-sql-runner](https://github.com/bingooh/b-sql-runner)是一款简单的`sql query builder`，追求以最接近写SQL的方式来完成对数据的操作
 
-b-sql-runner底层使用[knex](https://github.com/tgriesser/knex)执行SQL，后期可能使用其他库实现。**目前没有单元测试，请谨慎考虑在生产环境里使用！**
+b-sql-runner底层使用[knex](https://github.com/tgriesser/knex)执行SQL，后期可能使用其他库实现。**目前没有单元测试，请谨慎考虑在生产环境里使用！** 欢迎提供PR，尤其欢迎提供单元测试PR，Have Fun！
 
-b-sql-runner参考了以下框架，在次致谢
+b-sql-runner参考了以下框架，在次致谢！
 - [knex](https://github.com/tgriesser/knex)
 - [typeorm](https://github.com/typeorm/typeorm)
 - [squel](https://github.com/hiddentao/squel)
 
-欢迎提供PR，尤其欢迎提供单元测试PR，Have Fun！
+文档快速指引
+- [Connecton](#connection)
+- [SqlRunner](#sqlrunner)
+    - [SELECT](#select)
+    - [INSRT](#insert)
+    - [UPDATE](#update)
+    - [DELETE](#delete)
+- [](#)
 
 ## Feature
 - **仅支持单表的增删改查**
