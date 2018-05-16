@@ -20,7 +20,16 @@ b-sql-runner参考了以下框架，在次致谢！
 - [Raw Query](#raw-query)
 - [Returning Query](#returinig-query)
 - [API](#api)
-- [](#)
+- [运算符](#运算符)
+- [聚合函数](#聚合函数)
+- [扩展运算符](#扩展运算符)
+- [ConnectionManager](#connectionmanager)
+- [Conneciton](#conneciton-1)
+- [SqlRunner](#sqlrunner-1)
+- [SelectSqlRunner](#selectsqlrunner)
+- [UpdateSqlRunner](#updatesqlrunner)
+- [DeleteSqlRunner](#deletedqlrunner)
+- [Other](#other)
 
 ## Feature
 - **仅支持单表的增删改查**
@@ -328,6 +337,17 @@ sqlRunner
 - `idNotIn()` -类似`nin()`，可指定`idField`
 - `raw()` - 指定raw查询表达式
 - `expr()` - 指定复杂条件表达式
+
+### ConnectionManager
+- `createDefaultConnection()`
+- `createConnections()`
+- `getConnection()`
+- `existsConnection()`
+
+### Connection
+- `close()` -关闭连接池
+- `createTx()` -创建事务，需自行提交或回滚事务
+- `runInTx()` -在事务里执行查询，传入的事务需要自行提交或回滚
 
 ### SqlRunner
 - `select()` -获取`SelectSqlRunner`
