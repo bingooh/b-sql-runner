@@ -314,9 +314,9 @@ sqlRunner
 保存记录行，必须设置主键，对传入的记录执行如下操作（同1个数据库事务）
 1. 如果记录不包含主键字段值，则归到`fresh rows`
 2. 如果记录包含主键字段值：
-    1.取所有记录的主键值，查询数据库判断对应的记录是否存在
-    2.如果不存在，则归到`fresh rows`
-    3.如果已存在，则归到`dirty rows`
+    1. 取所有记录的主键值，查询数据库判断对应的记录是否存在
+    2. 如果不存在，则归到`fresh rows`
+    3. 如果已存在，则归到`dirty rows`
 3. 对`fresh rows`执行`insert`，对`dirty`执行`update`
 ```javascript
 let users=[{oid:1,name:'n1'},{name:'n2'}];
