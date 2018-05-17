@@ -8,6 +8,8 @@ b-sql-runner参考了以下框架，在次致谢！
 - [squel](https://github.com/hiddentao/squel)
 
 ## Donate
+如果你喜欢本项目，不妨请我喝杯咖啡
+
 <p align="center">
     <img src="doc/donate_wx.png">
 </p>
