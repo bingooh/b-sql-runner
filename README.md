@@ -7,19 +7,18 @@ b-sql-runner参考了以下框架，在次致谢！
 - [typeorm](https://github.com/typeorm/typeorm)
 - [squel](https://github.com/hiddentao/squel)
 
-## Donate
-如果你喜欢本项目，不妨请我喝杯咖啡
-
-<p align="center">
-    <img src="doc/donate_wx.png">
-</p>
-
 ## Feature
 - **仅支持单表的增删改查**
 - 动态SQL
 - 事务
 - 支持Typescript
 
+## Donate
+如果你喜欢本项目，不妨请我喝杯咖啡
+
+<p align="center">
+    <img src="doc/donate_wx.png">
+</p>
 
 ## 快速指引
 - [Connecton](#connection)
