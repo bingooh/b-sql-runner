@@ -1,6 +1,6 @@
 [b-sql-runner](https://github.com/bingooh/b-sql-runner)是一款简单的`sql query builder`，追求以最接近写SQL的方式来完成对数据的操作
 
-b-sql-runner底层使用[knex](https://github.com/tgriesser/knex)执行SQL，后期可能使用其他库实现。**目前没有单元测试，请谨慎考虑在生产环境里使用！** 欢迎提供PR，尤其欢迎提供单元测试PR，Have Fun！
+b-sql-runner底层使用[knex](https://github.com/tgriesser/knex)执行SQL，后期可能使用其他库实现。**目前没有单元测试，请谨慎考虑在生产环境里使用！** 欢迎提供PR，尤其是单元测试PR，Have Fun！
 
 b-sql-runner参考了以下框架，在次致谢！
 - [knex](https://github.com/tgriesser/knex)
@@ -10,8 +10,40 @@ b-sql-runner参考了以下框架，在次致谢！
 ## Feature
 - **仅支持单表的增删改查**
 - 动态SQL
-- 事务
+- 分页查询
+- 数据库事务
 - 支持Typescript
+
+## Example
+```javascript
+let sqlRunner=getConnection().sqlRunner();
+
+let users=await sqlRunner
+    .select("oid,group")
+    .field(b.sum('score').as('scores'))
+    .from('t_user')
+    .where(b.eq('status','enable'))
+    .and(b.isnotnull('mobile'))
+    .groupBy('group')
+    .having(b.gte('scores',100))
+    .orderBy(b.asc('gid,creationDate'))
+    .limit(10)
+    .findMany();
+
+let UserRepository=getRepository({name:'t_user',pk:'oid'});
+let affected=await UserRepository
+    .update()
+    .incr('score',10)
+    .decr('age',10)
+    .replace('nickname','name')
+    .run();
+
+let users=[{name:'n1'},{name:'n2}];
+let affectedUsers=await UserRepository
+    .insert(users)
+    .returning("*",b.idIn(users,'name'))
+    .run();
+```
 
 ## Donate
 如果你喜欢本项目，不妨请我喝杯咖啡
@@ -106,8 +138,7 @@ const slaveDbConn=getConnection('slaveDb');
 
 关闭数据库连接池
 ```javascript
-const conn=getConnection();
-await conn.close();
+await getConnection().close();
 ```
 
 ## SqlRunner
