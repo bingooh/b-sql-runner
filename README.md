@@ -317,7 +317,7 @@ sqlRunner
     1. 取所有记录的主键值，查询数据库判断对应的记录是否存在
     2. 如果不存在，则归到`fresh rows`
     3. 如果已存在，则归到`dirty rows`
-3. 对`fresh rows`执行`insert`，对`dirty`执行`update`
+3. 对`fresh rows`执行`insert`，对`dirty rows`执行`update`
 ```javascript
 let users=[{oid:1,name:'n1'},{name:'n2'}];
 
@@ -333,12 +333,38 @@ sqlRunner
 
 ### DELETE
 ```javascript
+let users=[{oid:1,name:'n1'},{oid:2,name:'n2'}];
 
+//delete from `t_user` where `oid` in (1, 2)
+sqlRunner.delete(users).from('t_user','oid').run();
+sqlRunner.delete().from('t_user','oid').values(users).run();
+sqlRunner.delete().from('t_user').where(b.in('oid',[1,2])).run();
+```
+
+删除表的全部记录，为了防止误删除，必须设置查询条件
+```javascript
+//delete from `t_user` where 1 = 1
+sqlRunner.delete().from('t_user2').clear();
+sqlRunner.delete().from('t_user2').where(b.alwaysTrue()).run();
 ```
 
 ## Repository
-```javascript
+`Repository`针对单表操作，简单封装`SqlRunner`
 
+```javascript
+class UserRepository extends Repository<User>{
+    //覆盖此属性设置要操作的table，后期可能改为使用decorator
+    protected static table:TableEntity={name:'t_user',pk:'oid'};
+}
+
+let user=await UserRepository.findOne(1);
+let affected=await UserRepository.update(user).run();
+```
+
+`Repository`可配置其使用的数据库表和连接, **实验中，后期可能修改**
+```javascript
+UserRepository.useTable({name:'t_user2',pk:'oid'});
+UserRepository.useConnection(getConnection('slaveryDb'));
 ```
 
 ## Transaction

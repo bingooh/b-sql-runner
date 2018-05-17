@@ -18,7 +18,7 @@ export class Repository<T>{
     }
 
     static sqlRunner<T>():SqlRunner<T>{
-        let conn=this.connection||getConnection();
+        let conn=this.connection||(this.connection=getConnection());
         return conn.sqlRunner<T>();
     }
 
