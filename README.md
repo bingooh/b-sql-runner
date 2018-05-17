@@ -38,10 +38,10 @@ let affected=await UserRepository
     .replace('nickname','name')
     .run();
 
-let users=[{name:'n1'},{name:'n2}];
+let users=[{name:'n1'},{name:'n2'}];
 let affectedUsers=await UserRepository
     .insert(users)
-    .returning("*",b.idIn(users,'name'))
+    .returning("*",b.expr(b.idIn(users,'name')))
     .run();
 ```
 
