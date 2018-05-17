@@ -9,7 +9,7 @@ b-sql-runner参考了以下框架，在次致谢！
 
 ## Donate
 <p align="center">
-    <img src="doc/donate_wx.png" width="400" height="400">
+    <img src="doc/donate_wx.png">
 </p>
 
 ## Feature
