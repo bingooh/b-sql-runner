@@ -350,21 +350,30 @@ sqlRunner.delete().from('t_user2').where(b.alwaysTrue()).run();
 
 ## Repository
 `Repository`针对单表操作，简单封装`SqlRunner`
-
 ```javascript
-class UserRepository extends Repository<User>{
-    //覆盖此属性设置要操作的table，后期可能改为使用decorator
-    protected static table:TableEntity={name:'t_user',pk:'oid'};
-}
+let UserRepository=getRepository<User>({name:'t_user',pk:'oid'});
 
 let user=await UserRepository.findOne(1);
 let affected=await UserRepository.update(user).run();
 ```
 
-`Repository`可配置其使用的数据库表和连接, **实验中，后期可能修改**
+自定义`Repository`
 ```javascript
-UserRepository.useTable({name:'t_user2',pk:'oid'});
-UserRepository.useConnection(getConnection('slaveryDb'));
+class UserRepo extends Repository<User>{
+    //可以在构造函数里设置表
+    constructor(){
+        super();
+        this.useTable({name:'t_user',pk:'oid'});
+    }
+
+    //自定义查询
+    async findDisabledUsers():Promise<Array<User>>{
+        return this.select().where(b.eq('status','disabled')).findMany();
+    }
+}
+
+let UserRepository=getCustomRepository(UserRepo);
+let users=await UserRepository.findDisabledUsers();
 ```
 
 ## Transaction
@@ -432,6 +441,9 @@ UserRepository.useConnection(getConnection('slaveryDb'));
 - `close()` -关闭连接池
 - `createTx()` -创建事务，需自行提交或回滚事务
 - `runInTx()` -在事务里执行查询，传入的事务需要自行提交或回滚
+-`sqlRunner()` -获取`SqlRunner`
+- `repository()` -获取`Repository`
+- `customRepository()` -获取定制`Repository`
 
 ### SqlRunner
 - `select()` -获取`SelectSqlRunner`

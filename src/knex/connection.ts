@@ -1,6 +1,8 @@
 import * as Knex from "knex";
 import {Config, Transaction} from "knex";
 import {SqlRunner} from "./sql-runner";
+import {Repository} from "./repository";
+import {TableEntity} from "..";
 
 export class ConnectionManager{
     private static conns:{[name:string]:Connection}={};
@@ -34,6 +36,15 @@ export class ConnectionManager{
 
 export function getConnection(name:string='default') {
     return ConnectionManager.getConnection(name);
+}
+
+export function getRepository<T>(table:TableEntity,connection?:string):Repository<T>{
+    return getConnection(connection).repository<T>(table);
+}
+
+export function getCustomRepository<U extends Repository<any>>(
+    RepoClazz:new ()=>U,table?:TableEntity,connection?:string):U{
+    return getConnection(connection).customRepository<U>(RepoClazz,table);
 }
 
 export class Connection{
@@ -91,5 +102,20 @@ export class Connection{
     sqlRunner<T>():SqlRunner<T>{
         this._sqlRunner=this._sqlRunner||new SqlRunner<any>(this);
         return this._sqlRunner;
+    }
+
+    repository<T>(table:TableEntity):Repository<T>{
+        let r=new Repository<T>();
+        r.useTable(table);
+        r.useConnection(this);
+        return r;
+    }
+
+    customRepository<U extends Repository<any>>(
+        RepoClazz:new ()=>U,table?:TableEntity):U{
+        let r=new RepoClazz();
+        if(table!=undefined)r.useTable(table);
+        r.useConnection(this);
+        return r;
     }
 }
