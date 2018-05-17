@@ -1,6 +1,6 @@
 {
   "name": "b-sql-runner",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "b-sql-runner",
   "main": "index.js",
   "scripts": {
