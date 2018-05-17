@@ -30,6 +30,7 @@ let users=await sqlRunner
     .limit(10)
     .findMany();
 
+//update `t_user` set `score` = `score` + 10, `age` = `age` - 10, `nickname` = `name`
 let UserRepository=getRepository({name:'t_user',pk:'oid'});
 let affected=await UserRepository
     .update()
