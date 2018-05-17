@@ -9,7 +9,7 @@ b-sql-runner参考了以下框架，在次致谢！
 
 ## Donate
 <p align="center">
-    <img src="https://github.com/bingooh/b-sql-runner/tree/master/doc/donate_wx.png">
+    <img src="doc/donate_wx.png">
 </p>
 
 ## Feature
