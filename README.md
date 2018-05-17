@@ -470,7 +470,7 @@ getConnection()
 ```
 
 如果新增多条记录，并且数据库不支持`returning`语句(如mysql)。那么`returning()`必须设置查询条件
-```
+```javascript
 //`title`需要为unique key，否则返回的可能不是新增的记录
 //insert into `t_user` (`title`) values (1), (2)
 //select * from `t_user` where `title` in ('1', '2')
