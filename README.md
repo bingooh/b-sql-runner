@@ -7,7 +7,19 @@ b-sql-runner参考了以下框架，在次致谢！
 - [typeorm](https://github.com/typeorm/typeorm)
 - [squel](https://github.com/hiddentao/squel)
 
-快速指引
+## Donate
+<p align="center">
+    <img src="https://github.com/bingooh/b-sql-runner/tree/master/doc/donate_wx.png">
+</p>
+
+## Feature
+- **仅支持单表的增删改查**
+- 动态SQL
+- 事务
+- 支持Typescript
+
+
+## 快速指引
 - [Connecton](#connection)
 - [SqlRunner](#sqlrunner)
     - [SELECT](#select)
@@ -31,11 +43,7 @@ b-sql-runner参考了以下框架，在次致谢！
     - [DeleteSqlRunner](#deletedqlrunner)
     - [Other](#other)
 
-## Feature
-- **仅支持单表的增删改查**
-- 动态SQL
-- 事务
-- 支持Typescript
+
 
 ## INSTALL
 通过npm安装
