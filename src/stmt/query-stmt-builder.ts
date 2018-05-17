@@ -52,7 +52,7 @@ export  class QueryStmtBuilder<T extends QueryStmtEntity>
     }
 
     inTx(tx?:any){
-        this.stmt.tx=tx;
+        if(tx!=undefined) this.stmt.tx=tx;
         return this;
     }
 

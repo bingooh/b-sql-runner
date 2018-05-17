@@ -24,6 +24,7 @@ import {SqlBuilder} from "./sql-builder";
 import {isArray} from "util";
 import {idArray, isEmpty} from "../common/util";
 import {alwaysTrue} from "../stmt/cond-stmt-builder";
+import {Transaction} from "knex";
 
 
 /*mysql仅返回第1条新增记录的ID，此方法检查新增记录rows的长度，与新增记录后返回的id数组的长度是否相同*/
@@ -82,8 +83,8 @@ export class SelectSqlRunner<T> extends SelectStmtBuilder{
         return this.firstRow(rows);
     }
 
-    async findFirst():Promise<T|undefined>{
-        let stmt=this.limit(1).toStmt();
+    async findFirst(limit:number=1):Promise<T|undefined>{
+        let stmt=this.limit(limit).toStmt();
         let rows=await this.buildQuery(stmt);
 
         return this.firstRow(rows);
@@ -386,8 +387,9 @@ export class DeleteSqlRunner<T> extends DeleteStmtBuilder{
     }
 
     /*删除所有记录，返回收影响的行数*/
-    async clear():Promise<number>{
-        let stmt=this.toStmt();
+    async clear(tx?:Transaction):Promise<number>{
+        let stmt=this.inTx(tx).toStmt();
+
         stmt.returning=undefined;
         stmt.where=expr(alwaysTrue()).toStmt();
 

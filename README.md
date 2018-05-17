@@ -265,9 +265,13 @@ sqlRunner
 
 ### INSERT
 ```javascript
-sqlRunner.insert(users).into('t_user').run()
+sqlRunner.insert(users).into('t_user').run();
+sqlRunner.insert().into('t_user').values(users).run();
 
-sqlRunner.insert().into('t_user').values(users).run()
+//指定要插入的字段，以下`oid`字段将被忽略
+//insert into `t_user` (`name`) values ('bill')
+let user={oid:1,name:'bill'}
+sqlRunner.insert(user).into('t_user').fields('name').run();
 ```
 
 ### UPDATE
@@ -377,24 +381,105 @@ let users=await UserRepository.findDisabledUsers();
 ```
 
 ## Transaction
-```javascript
+`SqlRunner.inTx()`用于设置执行SQL时使用的数据库事务
 
+`Connection.createTx()`创建1个新事务，在执行完SQL后需要自行提交/回滚事务
+```javascript
+let tx=await getConnection().createTx();
+try{
+    let repo=getRepository({name:'t_user',pk:'oid'});
+    let user=await repo.select().forUpdate().inTx(tx).findFirst();
+    let affected=await repo.update(user,tx).run();
+
+    tx.commit();
+}catch(e){
+    tx.rollback();
+}
+
+```
+
+`Connection.runInTx()`创建1个新事务，并传给回调函数。执行完SQL后会自动提交/回滚事务
+```javascript
+let affected=await getConnection()
+    .runInTx(async tx=>{
+        let repo=getRepository({name:'t_user',pk:'oid'});
+        let user=await repo.select('cc').forUpdate().inTx(tx).findFirst();
+        let affected=await repo.update(user,tx).run();
+
+        return affected;
+    });
 ```
 
 ## Dynamic SQL
-```javascript
+`select(), where()`等方法可以传入`undefined`作为参数值，在创建查询时将被忽略
 
+```javascript
+let isAdmin=true;
+let cid=1;//current login user id;
+//admin:  select `oid`, `name`, `secret` from `t_user`
+//!admin: select `oid`, `name` from `t_user` where `oid`=1
+UserRepository
+    .select(
+        'oid,name',
+        isAdmin?'secret':undefined
+    )
+    .where(
+        !isAdmin?b.eq('oid',cid):undefined
+    )
+    .findMany();
+
+//也可以使用以下方式
+let q=UserRepository.select('oid,name');
+q.field(isAdmin?'secret':undefined);
+q.where(!isAdmin?b.eq('oid',cid):undefined);
+q.findMany();
 ```
 
 ## Raw Query
+`raw()`支持设置raw表达式，详细用法请参考[knex raw](http://knexjs.org/#Raw)
 ```javascript
+//select lower('name') from `t_user` where `status`='disable' and `age` < 10
+UserRepository
+    .select(b.raw('lower(?)',['name']))
+    .where(b.raw('??=?',['status','disable']))
+    .and(b.raw(':field: < :value',{field:'age',value:10}));
 
+//update `t_user` set `name` = `firstName`+`lastName`
+UserRepository.update()
+    .set('name',b.raw('??+??',['firstName','lastName']))
 ```
 
 ## Returning Query
-```javascript
+`returning()`支持设置1条查询语句，在执行增删改操作前/后会执行此查询语句，以返回受影响的记录
 
+`returning()`不需要底层数据库支持`returning`表达式，这点与[knex returning](http://knexjs.org/#Builder-returning)不同
+
+```javascript
+//insert into `t_user` (`title`) values (1)
+//select * from `t_user` where `oid` = '3'
+UserRepository.insert({title:1}).returning('*').run();
+
+//以上语句等价于
+getConnection()
+    .runInTx(async tx=>{
+       let id=await UserRepository.insert({title:1},tx).run();
+       let user=await UserRepository.findOne(id as number,tx);
+
+       return user;
+    });
 ```
+
+如果新增多条记录，并且数据库不支持`returning`语句(如mysql)。那么`returning()`必须设置查询条件
+```
+//`title`需要为unique key，否则返回的可能不是新增的记录
+//insert into `t_user` (`title`) values (1), (2)
+//select * from `t_user` where `title` in ('1', '2')
+let users=[{title:1},{title:2}];
+UserRepository.insert(users)
+    .returning('*',b.expr(b.idIn(users,'title'))).run();
+```
+
+**记住：`returning()`只是帮助你在执行增删改前/后执行1条查询语句，这条查询语句的返回结果是由你决定的**
 
 ## API
 以下仅列出主要API

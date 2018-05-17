@@ -1,6 +1,7 @@
 import {Connection, getConnection} from "./connection";
 import {DeleteSqlRunner, InsertSqlRunner, SelectSqlRunner, SqlRunner, UpdateSqlRunner} from "./sql-runner";
 import {SelectFieldsParam, TableEntity} from "../model/stmt-model";
+import {Transaction} from "knex";
 
 export class Repository<T>{
     protected connection:Connection;
@@ -26,49 +27,49 @@ export class Repository<T>{
         return this.sqlRunner<T>().select(...fields).from(this.table);
     }
 
-    async findMany():Promise<Array<T>>{
-        return this.select().findMany();
+    async findMany(tx?:Transaction):Promise<Array<T>>{
+        return this.select().inTx(tx).findMany();
     }
 
-    async findOne(id:number|string):Promise<T|undefined>{
-        return this.select().findOne(id);
+    async findOne(id:number|string,tx?:Transaction):Promise<T|undefined>{
+        return this.select().inTx(tx).findOne(id);
     }
 
-    async findFirst():Promise<T|undefined>{
-        return this.select().findFirst();
+    async findFirst(limit:number=1,tx?:Transaction):Promise<T|undefined>{
+        return this.select().inTx(tx).findFirst(limit);
     }
 
-    async findTotal():Promise<number>{
-        return this.select().findTotal();
+    async findTotal(tx?:Transaction):Promise<number>{
+        return this.select().inTx(tx).findTotal();
     }
 
-    async findExists(id?:number|string):Promise<boolean>{
-        return this.select().findExists(id);
+    async findExists(id?:number|string,tx?:Transaction):Promise<boolean>{
+        return this.select().inTx(tx).findExists(id);
     }
 
-    async findWithTotal():Promise<{data:Array<T>,total:number}>{
-        return this.select().findWithTotal();
+    async findWithTotal(tx?:Transaction):Promise<{data:Array<T>,total:number}>{
+        return this.select().inTx(tx).findWithTotal();
     }
 
-    insert(rows?:object|Array<object>):InsertSqlRunner<T>{
-        return this.sqlRunner<T>().insert(rows).into(this.table);
+    insert(rows?:object|Array<object>,tx?:Transaction):InsertSqlRunner<T>{
+        return this.sqlRunner<T>().insert(rows).into(this.table).inTx(tx);
     }
 
-    update(rows?:object|Array<object>):UpdateSqlRunner<T>{
-        return this.sqlRunner<T>().update(rows).table(this.table);
+    update(rows?:object|Array<object>,tx?:Transaction):UpdateSqlRunner<T>{
+        return this.sqlRunner<T>().update(rows).table(this.table).inTx(tx);
     }
 
-    async save(rows?:object|Array<object>):
+    async save(rows?:object|Array<object>,tx?:Transaction):
         Promise<number|string|T|Array<T>|undefined>{
-        return this.update(rows).save();
+        return this.update(rows).inTx(tx).save();
     }
 
-    delete(rows?:object|Array<object>):DeleteSqlRunner<T>{
-        return this.sqlRunner<T>().delete(rows).from(this.table);
+    delete(rows?:object|Array<object>,tx?:Transaction):DeleteSqlRunner<T>{
+        return this.sqlRunner<T>().delete(rows).from(this.table).inTx(tx);
     }
 
-    async clear():Promise<number>{
-        return this.delete().clear();
+    async clear(tx?:Transaction):Promise<number>{
+        return this.delete().clear(tx);
     }
 
     async truncate(tx?:any):Promise<any>{
