@@ -474,6 +474,12 @@ let q=UserRepository.select('oid,name');
 q.field(isAdmin?'secret':undefined);
 q.where(!isAdmin?b.eq('oid',cid):undefined);
 q.findMany();
+
+//如果是简单查询条件，可以使用如下方式
+//select * from `t_user` where `name` = 'bill'
+UserRepository.select()
+    .where({name:'bill',gender:undefined})
+    .findMany()
 ```
 
 ## Raw Query

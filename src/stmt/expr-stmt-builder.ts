@@ -1,15 +1,5 @@
-import {
-    ExprStmtEntity,
-    LOGIC,
-    LogicStmtEntity,
-    KEY,
-    StmtBuilder,
-    RawStmtEntity,
-    CondStmtEntity, Condition, OPER, WhereCondsParam
-} from "../model/stmt-model";
-import {CondStmtBuilder, nin} from "./cond-stmt-builder";
-import {idArray, isCondStmtEntity, isExprStmtEntity, isStmtBuilder, toStmts} from "../common/util";
-import {RawStmtBuilder} from "./raw-stmt-builder";
+import {ExprStmtEntity, KEY, LOGIC, LogicStmtEntity, StmtBuilder, WhereCondsParam} from "../model/stmt-model";
+import {isObject, isStmtBuilder, toStmts} from "../common/util";
 
 export class ExprStmtBuilder implements StmtBuilder<ExprStmtEntity>{
     protected stmt:ExprStmtEntity;
@@ -19,6 +9,23 @@ export class ExprStmtBuilder implements StmtBuilder<ExprStmtEntity>{
     }
 
     private pushToStmts(logic:LOGIC, conds:WhereCondsParam){
+        conds!=conds.map(cond=>{
+            if(isStmtBuilder(cond))return cond;
+            if(!isObject(cond))return cond;
+
+            let empty=true;
+            for(let prop in cond){
+                if((cond as any)[prop]===undefined){
+                    delete (cond as any)[prop];
+                    continue;
+                }
+
+                empty=false;
+            }
+
+            return empty?undefined:cond;
+        }).filter(cond=>cond!=undefined);
+
         let stmts=toStmts(conds)
             .map<LogicStmtEntity>(cond=>{
                 return {$type:KEY.LOGIC,logic,cond}

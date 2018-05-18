@@ -7,6 +7,11 @@ const pkgPaths=[
     'build/src/**/*.js', 'build/src/**/*.ts'
 ];
 
+function patchVersion(){
+    return gulp.src("package.json",{read:false})
+        .pipe(shell("npm version patch"));
+}
+
 function clean(){
     return del(["dist/**","build/**"]);
 }
@@ -36,7 +41,8 @@ function publishNext() {
 
 exports=module.exports={
     clean,compile,build,
-    publish,publishNext
+    publish,publishNext,
+    patchVersion
 }
 
 gulp.task('default',gulp.series(clean,compile,build));
