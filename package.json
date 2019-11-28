@@ -15,7 +15,7 @@
   "author": "bingooh <bingooh@163.com>",
   "license": "MIT",
   "dependencies": {
-    "knex": "^0.14.6"
+    "knex": "^0.19.5"
   },
   "devDependencies": {
     "@types/knex": "^0.14.12",
