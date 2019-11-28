@@ -2,7 +2,7 @@
 
 b-sql-runner底层使用[knex](https://github.com/tgriesser/knex)执行SQL，后期可能使用其他库实现。**目前没有单元测试，请谨慎考虑在生产环境里使用！** 欢迎提供PR，尤其是单元测试PR，Have Fun！
 
-b-sql-runner参考了以下框架，在次致谢！
+b-sql-runner参考了以下框架，在此致谢！
 - [knex](https://github.com/tgriesser/knex)
 - [typeorm](https://github.com/typeorm/typeorm)
 - [squel](https://github.com/hiddentao/squel)
