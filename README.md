@@ -46,12 +46,6 @@ let affectedUsers=await UserRepository
     .run();
 ```
 
-## Donate
-如果你喜欢本项目，不妨请我喝杯咖啡
-
-<p align="center">
-    <img src="doc/donate_wx.png">
-</p>
 
 ## 快速指引
 - [Connecton](#connection)
